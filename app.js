@@ -53,7 +53,32 @@ function loadProgress() {
 }
 
 function saveProgress(progress) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    showSaveStatus('ok');
+  } catch (err) {
+    showSaveStatus('error');
+  }
+}
+
+let saveStatusTimeout = null;
+
+function showSaveStatus(status) {
+  const el = document.getElementById('saveStatus');
+  if (!el) return;
+  clearTimeout(saveStatusTimeout);
+
+  if (status === 'ok') {
+    el.textContent = 'Saved';
+    el.className = 'save-status is-ok';
+    saveStatusTimeout = setTimeout(() => {
+      el.textContent = '';
+      el.className = 'save-status';
+    }, 1600);
+  } else {
+    el.textContent = 'Not saving — check your browser’s privacy settings';
+    el.className = 'save-status is-error';
+  }
 }
 
 function buildDays(week, index) {
@@ -124,9 +149,12 @@ function computeStats(weeksData, progress, today) {
   return { totalMiles, totalRuns, doneRuns, doneMiles };
 }
 
+let lastRenderedDate = null;
+
 function render() {
   const progress = loadProgress();
   const today = todayISO();
+  lastRenderedDate = today;
 
   const weeksData = WEEKS.map((week, i) => ({
     index: i + 1,
@@ -254,4 +282,63 @@ function renderCalendar(weeksData, progress, today, currentWeekIndex) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', render);
+function exportBackup() {
+  const progress = loadProgress();
+  const blob = new Blob([JSON.stringify(progress, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `marathon-progress-${todayISO()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+        throw new Error('Invalid backup file');
+      }
+      saveProgress(parsed);
+      render();
+    } catch (err) {
+      showSaveStatus('error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function checkForNewDay() {
+  if (todayISO() !== lastRenderedDate) {
+    render();
+  }
+}
+
+function init() {
+  render();
+
+  const exportBtn = document.getElementById('exportBtn');
+  const importBtn = document.getElementById('importBtn');
+  const importFile = document.getElementById('importFile');
+
+  if (exportBtn) exportBtn.addEventListener('click', exportBackup);
+  if (importBtn && importFile) {
+    importBtn.addEventListener('click', () => importFile.click());
+    importFile.addEventListener('change', () => {
+      const file = importFile.files && importFile.files[0];
+      if (file) importBackup(file);
+      importFile.value = '';
+    });
+  }
+
+  setInterval(checkForNewDay, 5 * 60 * 1000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') checkForNewDay();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);

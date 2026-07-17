@@ -22,6 +22,15 @@
       </header>
 
       <div id="stats" class="stats"></div>
+
+      <div class="toolbar">
+        <span id="saveStatus" class="save-status" aria-live="polite"></span>
+        <div class="backup-actions">
+          <button type="button" id="exportBtn" class="tool-btn">Export Backup</button>
+          <button type="button" id="importBtn" class="tool-btn">Import Backup</button>
+          <input type="file" id="importFile" accept="application/json" hidden />
+        </div>
+      </div>
     </div>
 
     <div id="calendar" class="calendar"></div>
