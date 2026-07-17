@@ -254,8 +254,8 @@ body {
 }
 
 .week-card.is-current {
-  border-color: var(--fire);
-  box-shadow: 0 0 0 1px var(--fire), 0 0 32px -6px var(--fire-glow);
+  border-top: 3px solid var(--fire);
+  box-shadow: 0 10px 24px -14px var(--fire-glow);
   background: linear-gradient(180deg, #171214 0%, var(--bg-card) 60%);
 }
 
