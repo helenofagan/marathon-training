@@ -144,10 +144,15 @@ function render() {
   renderStats(stats, currentWeekIndex, weeksData.length);
   renderCalendar(weeksData, progress, today, currentWeekIndex);
 
+  const hero = document.getElementById('heroSticky');
+  if (hero) {
+    document.documentElement.style.setProperty('--hero-h', `${hero.offsetHeight}px`);
+  }
+
   if (currentWeekIndex >= 0) {
     requestAnimationFrame(() => {
       const el = document.querySelector(`[data-week-index="${currentWeekIndex}"]`);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
 }

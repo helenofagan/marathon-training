@@ -50,7 +50,16 @@ body {
   z-index: 1;
   max-width: 1040px;
   margin: 0 auto;
-  padding: 3.5rem 1.5rem 6rem;
+  padding: 0 1.5rem 6rem;
+}
+
+.hero-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 16px 28px -18px rgba(0, 0, 0, 0.75);
 }
 
 .page-header {
@@ -59,7 +68,7 @@ body {
   align-items: center;
   text-align: center;
   position: relative;
-  padding: 2.5rem 1rem 3rem;
+  padding: 1.75rem 1rem 1.25rem;
   animation: fade-in 1s ease-out;
 }
 
@@ -106,7 +115,7 @@ body {
 .title {
   font-family: 'Bebas Neue', sans-serif;
   font-weight: 400;
-  font-size: clamp(3.2rem, 11vw, 6.5rem);
+  font-size: clamp(2.4rem, 7vw, 4rem);
   line-height: 0.9;
   letter-spacing: 0.03em;
   color: var(--text);
@@ -122,18 +131,18 @@ body {
 
 .tagline {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-top: 1.25rem;
+  margin-top: 0.75rem;
 }
 
 .hairline {
   width: 64px;
   height: 2px;
   background: linear-gradient(90deg, var(--fire), var(--volt));
-  margin-top: 1.75rem;
+  margin-top: 1rem;
 }
 
 .stats {
@@ -141,8 +150,7 @@ body {
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
   background: var(--line);
-  border: 1px solid var(--line);
-  margin: 0 0 3rem;
+  border-top: 1px solid var(--line);
 }
 
 .stat {
@@ -151,8 +159,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  padding: 1.4rem 0.75rem;
+  gap: 0.3rem;
+  padding: 0.85rem 0.75rem;
 }
 
 .stat-value {
@@ -181,6 +189,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-top: 2rem;
 }
 
 .week-card {
@@ -189,6 +198,7 @@ body {
   padding: 1.1rem 1.2rem 1.3rem;
   transition: border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
   position: relative;
+  scroll-margin-top: calc(var(--hero-h, 0px) + 1.25rem);
 }
 
 .week-card.is-current {
