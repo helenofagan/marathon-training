@@ -1,0 +1,425 @@
+:root {
+  --bg: #0a0a0b;
+  --bg-card: #141417;
+  --bg-card-hover: #1b1b1f;
+  --bg-rest: #0e0e10;
+  --line: #29292e;
+  --line-soft: #1d1d21;
+  --text: #f3f1ec;
+  --muted: #7c7c85;
+  --muted-dim: #4a4a52;
+
+  --volt: #d6ff3f;
+  --volt-glow: rgba(214, 255, 63, 0.35);
+  --fire: #ff4d3d;
+  --fire-glow: rgba(255, 77, 61, 0.4);
+  --cyan: #3fd8e0;
+  --purple: #b48cff;
+  --gold: #ffb020;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Oswald', sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 6rem;
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 2.5rem 1rem 3rem;
+  animation: fade-in 1s ease-out;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 340px;
+  background: radial-gradient(ellipse at center, var(--fire-glow) 0%, transparent 65%);
+  filter: blur(40px);
+  z-index: -1;
+  opacity: 0.5;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    115deg,
+    transparent 0px,
+    transparent 42px,
+    rgba(255, 255, 255, 0.02) 42px,
+    rgba(255, 255, 255, 0.02) 44px
+  );
+  z-index: -1;
+}
+
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.1rem;
+}
+
+.eyebrow .dot {
+  color: var(--fire);
+  margin: 0 0.4em;
+  font-size: 0.6rem;
+}
+
+.title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  font-size: clamp(3.2rem, 11vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.03em;
+  color: var(--text);
+}
+
+.title-accent {
+  display: block;
+  background: linear-gradient(90deg, var(--fire) 0%, var(--volt) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 1.25rem;
+}
+
+.hairline {
+  width: 64px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--fire), var(--volt));
+  margin-top: 1.75rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin: 0 0 3rem;
+}
+
+.stat {
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1.4rem 0.75rem;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--volt);
+  text-shadow: 0 0 18px var(--volt-glow);
+}
+
+.stat-of {
+  font-size: 1rem;
+  color: var(--muted);
+  font-weight: 400;
+  text-shadow: none;
+}
+
+.stat-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.week-card {
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+  padding: 1.1rem 1.2rem 1.3rem;
+  transition: border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
+  position: relative;
+}
+
+.week-card.is-current {
+  border-color: var(--fire);
+  box-shadow: 0 0 0 1px var(--fire), 0 0 32px -6px var(--fire-glow);
+  background: linear-gradient(180deg, #171214 0%, var(--bg-card) 60%);
+}
+
+.week-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin-bottom: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.week-num {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.week-num em {
+  font-style: normal;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: var(--text);
+  margin-left: 0.3rem;
+  letter-spacing: 0.02em;
+}
+
+.week-range {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  color: var(--muted-dim);
+}
+
+.week-badge {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--fire);
+  padding: 0.28rem 0.6rem;
+  box-shadow: 0 0 16px -2px var(--fire-glow);
+}
+
+.week-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid var(--line);
+  background: var(--bg-rest);
+  padding: 0.6rem 0.3rem 0.7rem;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text);
+  text-align: center;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  min-height: 102px;
+}
+
+.day:not(.is-rest):hover {
+  border-color: var(--muted);
+  background: var(--bg-card-hover);
+}
+
+.day:not(.is-rest):active {
+  transform: scale(0.97);
+}
+
+.day.is-rest {
+  color: var(--muted-dim);
+  cursor: default;
+  opacity: 0.55;
+}
+
+.day.is-today {
+  border-color: var(--volt);
+  box-shadow: 0 0 0 1px var(--volt), 0 0 14px -2px var(--volt-glow);
+}
+
+.day-dow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.day-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  color: var(--muted-dim);
+}
+
+.day-workout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  margin-top: 0.2rem;
+}
+
+.day-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.day-miles {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+.day-flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.day-check {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.4rem;
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-size: 0.6rem;
+  line-height: 13px;
+  color: var(--bg);
+}
+
+.day.is-done {
+  border-color: var(--volt);
+  background: rgba(214, 255, 63, 0.06);
+}
+
+.day.is-done .day-check {
+  background: var(--volt);
+  border-color: var(--volt);
+  box-shadow: 0 0 10px -1px var(--volt-glow);
+}
+
+.day.is-done .day-label {
+  color: var(--volt);
+}
+
+/* Workout-type accent colors */
+.day.type-tempo .day-label { color: var(--fire); }
+.day.type-easy .day-label { color: var(--cyan); }
+.day.type-medEasy .day-label { color: var(--purple); }
+.day.type-long .day-label { color: #ff8a3d; }
+
+.day.type-tempo.is-done .day-label,
+.day.type-easy.is-done .day-label,
+.day.type-medEasy.is-done .day-label,
+.day.type-long.is-done .day-label {
+  color: var(--volt);
+}
+
+.day.is-special:not(.is-rest) {
+  border-color: var(--gold);
+  background: rgba(255, 176, 32, 0.06);
+}
+
+.day.is-special .day-label {
+  color: var(--gold);
+}
+
+.day.is-special.is-done {
+  border-color: var(--volt);
+  background: rgba(214, 255, 63, 0.08);
+}
+
+.day.is-special.is-done .day-label {
+  color: var(--volt);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .week-days {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.3rem;
+  }
+
+  .day {
+    padding: 0.4rem 0.15rem 0.5rem;
+    min-height: 90px;
+  }
+
+  .day-label {
+    font-size: 0.66rem;
+  }
+
+  .day-miles {
+    font-size: 0.58rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .week-days {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
