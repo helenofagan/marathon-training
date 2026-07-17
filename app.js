@@ -100,7 +100,7 @@ function buildDays(week, index) {
   return days;
 }
 
-function computeStats(weeksData, progress) {
+function computeStats(weeksData, progress, today) {
   let totalMiles = 0;
   let totalRuns = 0;
   let doneRuns = 0;
@@ -109,9 +109,12 @@ function computeStats(weeksData, progress) {
   for (const week of weeksData) {
     for (const day of week.days) {
       if (day.type === 'rest') continue;
+      const done = !!progress[day.id];
+      const missed = day.iso < today && !done;
+      if (missed) continue;
       totalRuns++;
       totalMiles += day.miles;
-      if (progress[day.id]) {
+      if (done) {
         doneRuns++;
         doneMiles += day.miles;
       }
@@ -137,7 +140,7 @@ function render() {
     return today >= start && today <= end;
   });
 
-  const stats = computeStats(weeksData, progress);
+  const stats = computeStats(weeksData, progress, today);
   renderStats(stats, currentWeekIndex, weeksData.length);
   renderCalendar(weeksData, progress, today, currentWeekIndex);
 
@@ -178,14 +181,16 @@ function typeClass(type) {
   return `type-${type}`;
 }
 
-function dayCellHTML(day, isToday, progress) {
+function dayCellHTML(day, isToday, progress, today) {
   const done = !!progress[day.id];
   const isRest = day.type === 'rest';
+  const isMissed = !isRest && !done && day.iso < today;
   const classes = ['day', typeClass(day.type)];
   if (isToday) classes.push('is-today');
   if (done) classes.push('is-done');
   if (day.special) classes.push('is-special');
   if (isRest) classes.push('is-rest');
+  if (isMissed) classes.push('is-missed');
 
   const milesText = day.miles != null ? `${day.miles}mi` : '';
   const note = day.note ? ` ${day.note}` : '';
@@ -215,16 +220,17 @@ function renderCalendar(weeksData, progress, today, currentWeekIndex) {
   el.innerHTML = weeksData
     .map((week, i) => {
       const isCurrent = i === currentWeekIndex;
+      const isPast = week.days[6].iso < today;
       const rangeLabel = `${fmtShort(week.days[0].date)} – ${fmtShort(week.days[6].date)}`;
       return `
-        <section class="week-card ${isCurrent ? 'is-current' : ''}" data-week-index="${i}">
+        <section class="week-card ${isCurrent ? 'is-current' : ''} ${isPast ? 'is-past' : ''}" data-week-index="${i}">
           <header class="week-header">
             <span class="week-num">Week <em>${week.index}</em></span>
             <span class="week-range">${rangeLabel}</span>
             ${isCurrent ? '<span class="week-badge">This Week</span>' : ''}
           </header>
           <div class="week-days">
-            ${week.days.map((day) => dayCellHTML(day, day.iso === today, progress)).join('')}
+            ${week.days.map((day) => dayCellHTML(day, day.iso === today, progress, today)).join('')}
           </div>
         </section>
       `;
